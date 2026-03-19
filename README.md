@@ -7,11 +7,11 @@ These templates implement a **sub-agent team model** where each agent has a dist
 ## Install as Plugin
 
 ```bash
-# Add this repo as a marketplace
-claude plugin marketplace add j129008/claude_code_settings
+# Add this repo as a marketplace (use your Git hosting URL)
+claude plugin marketplace add git@your-server:org/claude-code-settings.git
 
 # Install the team-pipeline plugin
-claude plugin install team-pipeline@claude_code_settings
+claude plugin install team-pipeline@claude-code-settings
 ```
 
 After installing, you get these slash commands:
