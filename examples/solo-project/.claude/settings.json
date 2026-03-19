@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Agent",
+      "WebFetch",
+      "WebSearch",
+      "Skill(ship)",
+      "Skill(create-pr)",
+      "Skill(retro)",
+      "Skill(ui-review)",
+      "Skill(design-system)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf /)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git checkout -- .)",
+      "Bash(git restore .)",
+      "Bash(sudo*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "SESSION_ID=$(cat /dev/stdin | jq -r '.session_id'); MARKER=\"/tmp/claude-pm-approved-${SESSION_ID}\"; if [ ! -f \"$MARKER\" ]; then printf '{\"decision\":\"block\",\"reason\":\"PM has not approved yet. Invoke the steve-jobs agent for product review first. After receiving SHIP IT, run: touch %s\"}' \"$MARKER\"; fi",
+            "timeout": 5,
+            "statusMessage": "Checking PM approval..."
+          },
+          {
+            "type": "command",
+            "command": "say 'Pipeline complete, please check results'",
+            "timeout": 10,
+            "statusMessage": "Notifying..."
+          }
+        ]
+      }
+    ]
+  }
+}

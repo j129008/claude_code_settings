@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pipeline-check.sh",
+            "timeout": 5,
+            "description": "Checking ship pipeline completion..."
+          },
+          {
+            "type": "command",
+            "command": "say 'Pipeline complete, please check results'",
+            "timeout": 10,
+            "description": "Voice notification on completion"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash",
+      "WebFetch",
+      "WebSearch",
+      "mcp__playwright__*"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(git push origin --tags)"
+    ],
+    "ask": [
+      "Bash(git push --force*)",
+      "Bash(git push * --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(git branch -D*)",
+      "Bash(rm -rf *)",
+      "Bash(terraform apply*)",
+      "Bash(terraform destroy*)"
+    ]
+  }
+}
