@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude_code_settings",
+  "description": "Team development pipeline plugins for Claude Code — sub-agent teams, self-improving agents, and automated code review",
+  "owner": {
+    "name": "j129008"
+  },
+  "plugins": [
+    {
+      "name": "team-pipeline",
+      "description": "End-to-end development pipeline with sub-agent team (PM, engineers, reviewer, QA). Includes /ship, /review, /retro, and more.",
+      "source": "./plugins/team-pipeline",
+      "category": "development"
+    }
+  ]
+}
