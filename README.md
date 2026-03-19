@@ -4,23 +4,44 @@ Production-tested Claude Code configurations for team development workflows.
 
 These templates implement a **sub-agent team model** where each agent has a distinct personality, role, and set of responsibilities — turning Claude Code into a full development pipeline.
 
+## Install as Plugin
+
+```bash
+# Add this repo as a marketplace
+claude plugin marketplace add j129008/claude_code_settings
+
+# Install the team-pipeline plugin
+claude plugin install team-pipeline@claude_code_settings
+```
+
+After installing, you get these slash commands:
+
+| Command | Description |
+|---------|-------------|
+| `/ship <task>` | Full pipeline: PM spec → implement → QA → review → merge → retro |
+| `/review` | Linus-style 8-point code review with auto-fix loop |
+| `/retro` | Retrospective: distill learnings so agents improve over time |
+| `/create-branch` | Create feature/fix/chore branch with conventions |
+| `/create-pr` | Push and create PR with test results |
+| `/self-improve` | Audit workspace config for improvements |
+
 ## What's Inside
 
 ```
-examples/
-├── fullstack-saas/     # Multi-repo SaaS with PR workflow, CI/CD, Slack notifications
-└── solo-project/       # Single-repo project with full pipeline
+plugins/
+└── team-pipeline/        # Installable plugin
+    ├── .claude-plugin/
+    ├── agents/            # 7 sub-agents (PM, engineers, reviewer, QA, etc.)
+    ├── skills/            # 6 slash commands
+    ├── hooks/             # Pipeline enforcement
+    └── learnings/         # Self-improvement templates
 
-templates/              # Copy-paste building blocks
-├── agents/             # Sub-agent definitions (PM, backend, frontend, reviewer, etc.)
-├── skills/             # Reusable skill definitions (ship, retro, PR workflow, etc.)
-├── hooks/              # Stop hooks for pipeline enforcement
-└── learnings/          # Self-improving agent knowledge base
+examples/                  # Complete project configurations
+├── fullstack-saas/        # Multi-repo SaaS setup
+└── solo-project/          # Single-repo project setup
 
-docs/
-├── agents-guide.md     # How to design sub-agents
-├── skills-guide.md     # How to write skills
-└── learnings-guide.md  # How the self-improvement loop works
+templates/                 # Copy-paste building blocks
+docs/                      # Guides for agents, skills, and learnings
 ```
 
 ## Key Concepts
@@ -35,6 +56,7 @@ Each agent is a named personality with specific expertise:
 | **frontend-dev** | Dan Abramov / Lea Verou | Frontend implementation |
 | **code-reviewer** | Linus Torvalds | Code review, merge gatekeeper |
 | **qa-tester** | James Whittaker | Testing, bug catching |
+| **devops** | Kelsey Hightower | Infrastructure, CI/CD |
 | **tech-writer** | Donald Knuth | Documentation |
 
 ### 2. Ship Pipeline (`/ship`)
@@ -66,7 +88,7 @@ After each pipeline run, the `/retro` skill:
 - Agents read their learnings before starting any task
 - **Result: agents get better over time, never repeating the same mistakes**
 
-### 4. Strict Code Review
+### 4. Strict Code Review (`/review`)
 The code reviewer (Linus Torvalds personality) checks 8 dimensions:
 
 1. Correctness — logic, edge cases, error handling
@@ -80,88 +102,39 @@ The code reviewer (Linus Torvalds personality) checks 8 dimensions:
 
 Failed reviews trigger **automatic fix + re-review loops** (max 3 rounds).
 
-## Quick Start
+## Alternative Setup (Without Plugin)
 
-### Option A: Start from an example
+### Option A: Copy an example
 ```bash
-# Copy the example that matches your project
 cp -r examples/solo-project/.claude /your/project/.claude
 cp examples/solo-project/CLAUDE.md /your/project/CLAUDE.md
-
 # Edit CLAUDE.md to match your project
 ```
 
-### Option B: Build from templates
+### Option B: Pick templates
 ```bash
-# Copy just the pieces you need
 mkdir -p /your/project/.claude/{agents,skills,learnings}
-
-# Pick agents
-cp templates/agents/project-manager.md /your/project/.claude/agents/
 cp templates/agents/code-reviewer.md /your/project/.claude/agents/
-
-# Pick skills
 cp -r templates/skills/ship /your/project/.claude/skills/
 cp -r templates/skills/retro /your/project/.claude/skills/
-```
-
-### Option C: Minimal setup (just the reviewer)
-```bash
-# If you only want strict code review
-mkdir -p /your/project/.claude/agents
-cp templates/agents/code-reviewer.md /your/project/.claude/agents/
 ```
 
 ## Customization
 
 ### Swap agent personalities
-The personalities are just prompts — swap them for anyone:
-- Backend: DHH → Rob Pike (Go style) → José Valim (Elixir style)
+- Backend: DHH → Rob Pike (Go) → José Valim (Elixir)
 - Frontend: Dan Abramov → Evan You (Vue) → Rich Harris (Svelte)
 - Reviewer: Linus Torvalds → your tech lead's style
 
 ### Adapt to your stack
-Each agent has a "Tech Stack" section — update it:
-```markdown
-## Tech Stack
-- **Backend**: Django 5.1, Python 3.10+, DRF
-- **Frontend**: Next.js 15, React 19, TypeScript
-```
+Each agent has a "Tech Stack" section — update it for your project.
 
 ### Add your Git platform
-The examples use generic `git` commands. Adapt PR skills to your platform:
+Skills use generic `git` commands. Adapt for:
 - **GitHub**: `gh pr create/merge/review`
 - **GitLab**: `glab mr create/merge`
 - **Gitea**: `tea pr create/merge`
-- **Bitbucket**: `bb pr create`
-
-## Settings Reference
-
-### `settings.json` (user-level, `~/.claude/`)
-```json
-{
-  "permissions": {
-    "allow": ["Read", "Edit", "Write", "Glob", "Grep", "Bash", "WebFetch"],
-    "deny": ["Bash(rm -rf /)", "Bash(git push --force*)"],
-    "ask": ["Bash(git push origin --tags)", "Bash(terraform apply*)"]
-  }
-}
-```
-
-### `settings.local.json` (project-level, `.claude/`)
-```json
-{
-  "permissions": {
-    "allow": ["mcp__playwright__*"],
-    "deny": ["Bash(rm -rf /)"],
-    "ask": ["Bash(git reset --hard*)"]
-  },
-  "hooks": {
-    "Stop": [{ "hooks": [{ "type": "command", "command": ".claude/hooks/pipeline-check.sh" }] }]
-  }
-}
-```
 
 ## License
 
-MIT — use however you want.
+MIT

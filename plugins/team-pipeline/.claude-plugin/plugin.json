@@ -1,0 +1,8 @@
+{
+  "name": "team-pipeline",
+  "version": "1.0.0",
+  "description": "End-to-end development pipeline with sub-agent team (PM, engineers, reviewer, QA). Includes /ship pipeline, /retro self-improving agents, /review Linus-style code review, and /self-improve workspace auditing.",
+  "author": {
+    "name": "j129008"
+  }
+}
